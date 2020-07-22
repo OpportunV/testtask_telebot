@@ -2,23 +2,23 @@ import json
 from typing import Optional, Tuple
 
 import telebot as tb
-from flask import Flask, request
 
 import tools
 
 
-def init_bot(token: str, saver: tools.Saver, web_data: Optional[Tuple[str, Flask]] = None) -> tb.TeleBot:
+def init_bot(token: str, saver: tools.Saver, web_data: Optional[Tuple[str, object]] = None) -> tb.TeleBot:
     """
     
     :param token: str, bot token
     :param saver: tools.Saver instance or other, must have method add
-    :param web_data: optional tuple(url, app), required for webhook
+    :param web_data: optional tuple(url valid, app Flask class instance), required for webhook
     :return: telebot.TeleBot instance
     """
     bot = tb.TeleBot(token, threaded=False)
     
     bot.remove_webhook()
     if web_data is not None:
+        from flask import request
         url, app = web_data
         bot.set_webhook(url=url)
         
